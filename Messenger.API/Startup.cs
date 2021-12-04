@@ -53,6 +53,7 @@ namespace Messenger.API
             services.AddAuthorization();
 
             services.AddScoped<UserRepository>();
+            services.AddScoped<ChatRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

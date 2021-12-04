@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Messenger.Domain.Contracts
 {
-    public class ChatDto
+    public class InputChatDto
     {
-        public string Title { get; set; }
+        public string Title { get; init; }
+        public IEnumerable<Guid> UserIds { get; init; }
+        
     }
 }

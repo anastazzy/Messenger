@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Messenger.Domain;
+using Messenger.Domain.Contracts;
+using Messenger.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Messenger.API.Controllers
@@ -14,14 +17,23 @@ namespace Messenger.API.Controllers
     [Authorize]
     public class ChatController : ControllerBase
     {
-        [HttpGet]
-        public string CreateChat()
+        private readonly ChatRepository _repository;
+        public ChatController(ChatRepository repository)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
-            var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
-
-            return $"Hello, {username}, your id: {userId}";
+            _repository = repository;
         }
-
+        
+        [HttpGet]
+        [Route("{id}")]
+        public Task<MessageDto[]> GetListOfChats(Guid id)
+        {
+            return _repository.GetListOfMessage(id);
+        }
+        
+        [HttpPost]
+        public Task<Guid> CreateChat([FromBody]InputChatDto inputChatDto)
+        {
+            return _repository.CreateChat(inputChatDto, HttpContext.GetUserId());
+        }
     }
 }

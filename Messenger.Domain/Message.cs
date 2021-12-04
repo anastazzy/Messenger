@@ -13,6 +13,10 @@ namespace Messenger.Domain
         public DateTimeOffset CreationTime { get; set; }
         public Status Status { get; set; }
 
+        public Guid UserId { get; init; }
+        //public string Username { get; init; }
+        public Guid ChatId { get; init; }
+
         public User User { get; set; }
         public Chat Chat { get; set; }
     }

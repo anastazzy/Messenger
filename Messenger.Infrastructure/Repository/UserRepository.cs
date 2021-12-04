@@ -52,7 +52,7 @@ namespace Messenger.Infrastructure.Repository
             return GenerateAccessJwtToken(result.Id.ToString(), result.Username);
         }
 
-        public static string GenerateAccessJwtToken(string userId, string username)
+        private static string GenerateAccessJwtToken(string userId, string username)
         {
             const string signingAlgorithm = SecurityAlgorithms.HmacSha256;
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("qwerq4r45y7646c4HBREUy"));
@@ -70,6 +70,29 @@ namespace Messenger.Infrastructure.Repository
 
             return new JwtSecurityTokenHandler()
                 .WriteToken(token);
+        }
+
+        public async Task<ListOfChatDto[]> GetListOfChats(Guid userId)
+        {
+            var response = await _dbContext.Chats
+                .Where(x => x.UsersInChat.Select(y => y.Id).Contains(userId))
+                .Include(x => x.MessagesInChat)
+                .ThenInclude(x => x.User)
+                .Select(x => new 
+                {
+                    x.Title,
+                    LastMessage = x.MessagesInChat.OrderBy(x => x.CreationTime).Last()
+                })
+                .ToArrayAsync();
+
+           return response.Select(x => new ListOfChatDto()
+            {
+                LastMessage = x.LastMessage.Text,
+                Name = x.Title,
+                Status = x.LastMessage.Status,
+                Username = x.LastMessage.User.Username
+            }).ToArray();
+
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Messenger.Domain;
 using Messenger.Domain.Contracts;
 using Messenger.Infrastructure.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Messenger.API.Controllers
 {
@@ -33,5 +31,13 @@ namespace Messenger.API.Controllers
         {
             return _repository.LoginAsync(user);
         }
+
+        [HttpGet]
+        [Route("chats")]
+        public Task<ListOfChatDto[]> GetListOfChats()
+        {
+            return _repository.GetListOfChats(HttpContext.GetUserId());
+        }
+
     }
 }
