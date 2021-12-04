@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.API", "Messenger.API\Messenger.API.csproj", "{6114BED7-A368-4AF4-8BE8-BEE145399765}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Domain", "Messenger.Domain\Messenger.Domain.csproj", "{21C641A9-A039-4DF7-862A-D1534254DF6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Domain", "Messenger.Domain\Messenger.Domain.csproj", "{21C641A9-A039-4DF7-862A-D1534254DF6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Infrastructure", "Messenger.Infrastructure\Messenger.Infrastructure.csproj", "{5F025E9E-473B-4704-886B-E4FD017CE465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Infrastructure", "Messenger.Infrastructure\Messenger.Infrastructure.csproj", "{5F025E9E-473B-4704-886B-E4FD017CE465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messengers.Tests", "Messengers.Tests\Messengers.Tests.csproj", "{C53E2C79-46A3-4F29-80AA-58C2C305E025}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messengers.Tests", "Messengers.Tests\Messengers.Tests.csproj", "{C53E2C79-46A3-4F29-80AA-58C2C305E025}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.API", "Messenger.API\Messenger.API.csproj", "{A7ED8943-0F97-4797-8FC1-F6F1D6EE834E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6114BED7-A368-4AF4-8BE8-BEE145399765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6114BED7-A368-4AF4-8BE8-BEE145399765}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6114BED7-A368-4AF4-8BE8-BEE145399765}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6114BED7-A368-4AF4-8BE8-BEE145399765}.Release|Any CPU.Build.0 = Release|Any CPU
 		{21C641A9-A039-4DF7-862A-D1534254DF6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21C641A9-A039-4DF7-862A-D1534254DF6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21C641A9-A039-4DF7-862A-D1534254DF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{C53E2C79-46A3-4F29-80AA-58C2C305E025}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C53E2C79-46A3-4F29-80AA-58C2C305E025}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C53E2C79-46A3-4F29-80AA-58C2C305E025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7ED8943-0F97-4797-8FC1-F6F1D6EE834E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7ED8943-0F97-4797-8FC1-F6F1D6EE834E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7ED8943-0F97-4797-8FC1-F6F1D6EE834E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7ED8943-0F97-4797-8FC1-F6F1D6EE834E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,9 +11,11 @@ namespace Messenger.Domain
     {
         public Guid Id { get; set; }
         public string Username { get; set; }
-        public DateTimeOffset CreationTime { get; set; }
+        public string PasswordHash { get; set; }
+      //  public DateTimeOffset CreationTime { get; set; }
 
         public IEnumerable<Chat> UserChats { get; set; }
+        public IEnumerable<Chat> UserChatAsAdmin { get; set; }
         public IEnumerable<Message> UserMessages { get; set; }
     }
 }

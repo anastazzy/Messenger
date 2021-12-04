@@ -8,6 +8,19 @@ namespace Messenger.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: true),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Chats",
                 columns: table => new
                 {
@@ -19,19 +32,12 @@ namespace Messenger.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chats", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Username = table.Column<string>(type: "text", nullable: true),
-                    CreationTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chats_Users_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,8 +72,8 @@ namespace Messenger.Infrastructure.Migrations
                     Text = table.Column<string>(type: "text", nullable: true),
                     CreationTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ChatId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ChatId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,14 +83,19 @@ namespace Messenger.Infrastructure.Migrations
                         column: x => x.ChatId,
                         principalTable: "Chats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Messages_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_AdminId",
+                table: "Chats",
+                column: "AdminId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatUser_UsersInChatId",

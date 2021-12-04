@@ -51,6 +51,8 @@ namespace Messenger.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdminId");
+
                     b.ToTable("Chats");
                 });
 
@@ -60,7 +62,7 @@ namespace Messenger.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ChatId")
+                    b.Property<Guid?>("ChatId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreationTime")
@@ -72,7 +74,7 @@ namespace Messenger.Infrastructure.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -90,8 +92,8 @@ namespace Messenger.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
 
                     b.Property<string>("Username")
                         .HasColumnType("text");
@@ -116,19 +118,26 @@ namespace Messenger.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Messenger.Domain.Chat", b =>
+                {
+                    b.HasOne("Messenger.Domain.User", "Admin")
+                        .WithMany("UserChatAsAdmin")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+                });
+
             modelBuilder.Entity("Messenger.Domain.Message", b =>
                 {
                     b.HasOne("Messenger.Domain.Chat", "Chat")
                         .WithMany("MessagesInChat")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatId");
 
                     b.HasOne("Messenger.Domain.User", "User")
                         .WithMany("UserMessages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Chat");
 
@@ -142,6 +151,8 @@ namespace Messenger.Infrastructure.Migrations
 
             modelBuilder.Entity("Messenger.Domain.User", b =>
                 {
+                    b.Navigation("UserChatAsAdmin");
+
                     b.Navigation("UserMessages");
                 });
 #pragma warning restore 612, 618

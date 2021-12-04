@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Messenger.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Messenger.Infrastructure.Data
 {
@@ -14,11 +15,19 @@ namespace Messenger.Infrastructure.Data
         {
 
         }
-
+        
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Chat> Chats { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Chat>()
+                .HasMany<User>(x => x.UsersInChat)
+                .WithMany(x => x.UserChats);
 
-
+            modelBuilder.Entity<Chat>()
+                .HasOne<User>(x => x.Admin)
+                .WithMany(x => x.UserChatAsAdmin);
+        }
     }
 }

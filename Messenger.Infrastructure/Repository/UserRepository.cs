@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Messenger.Domain;
 using Messenger.Domain.Contracts;
 using Messenger.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Messenger.Infrastructure.Repository
 {
@@ -19,12 +22,11 @@ namespace Messenger.Infrastructure.Repository
         {
             _dbContext = dbContext;
         }
-
-
-        public async Task<Guid> CreateUserAsync(UserDto userDto)
+        public async Task<Guid> SaveAsync(UserDto userDto)
         {
-            var user = new User()
+            var user = new User
             {
+                PasswordHash = GetHash(userDto.Password),
                 Username = userDto.Username
             };
             _dbContext.Users.Add(user);
@@ -32,31 +34,42 @@ namespace Messenger.Infrastructure.Repository
             return user.Id;
         }
 
-        public async Task<bool> DeleteUserAsync(Guid id)
+        public static string GetHash(string password)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
-            if (user == null) return false;
-            _dbContext.Users.Remove(user);
-            await _dbContext.SaveChangesAsync();
-            return true;
+            var hash = new StringBuilder();
+            using var hashAlgorithm = new SHA256Managed();
+
+            byte[] crypto = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(password));
+            foreach (byte theByte in crypto)
+                hash.Append(theByte.ToString("x2"));
+
+            return hash.ToString();
         }
 
-        public async Task<bool> EditUserAsync(Guid id, UserDto userDto)
+        public async Task<string> LoginAsync(UserDto user)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
-            if (user == null) return false;
-            user.Username = userDto.Username;
-            await _dbContext.SaveChangesAsync();
-            return true;
+            var result = await _dbContext.Users.FirstAsync(x => x.Username == user.Username && x.PasswordHash == GetHash(user.Password));
+            return GenerateAccessJwtToken(result.Id.ToString(), result.Username);
         }
 
-        public async Task<UserDto[]> GetUsersAsync()
+        public static string GenerateAccessJwtToken(string userId, string username)
         {
-            return await _dbContext.Users.Select(x => new UserDto()
+            const string signingAlgorithm = SecurityAlgorithms.HmacSha256;
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("qwerq4r45y7646c4HBREUy"));
+            var claims = new Claim[]
             {
-                Username = x.Username
-            }).ToArrayAsync();
-        }
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Sid, userId),
+            };
 
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.MaxValue,
+                signingCredentials: new SigningCredentials(securityKey, signingAlgorithm)
+            );
+
+            return new JwtSecurityTokenHandler()
+                .WriteToken(token);
+        }
     }
 }

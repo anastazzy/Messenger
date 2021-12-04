@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Messenger.Domain
         public string Title { get; set; }
         public DateTimeOffset CreationTime { get; set; }
         public Guid AdminId { get; set; }
+        public User Admin { get; set; }
         public IEnumerable<User> UsersInChat { get; set; }
         public IEnumerable<Message> MessagesInChat { get; set; }
 

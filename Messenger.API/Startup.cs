@@ -1,3 +1,4 @@
+using Messenger.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,9 +11,13 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
-using Messenger.Infrastructure.Data;
+using Messenger.Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Messenger.API
 {
@@ -28,10 +33,28 @@ namespace Messenger.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
             services.AddDbContext<MessengerDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
+
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = false,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("qwerq4r45y7646c4HBREUy")),
+                    };
+                });
+            services.AddAuthorization();
+
+            services.AddScoped<UserRepository>();
+
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Messenger.API", Version = "v1" });
@@ -52,6 +75,7 @@ namespace Messenger.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
