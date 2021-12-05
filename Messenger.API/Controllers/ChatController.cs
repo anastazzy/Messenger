@@ -23,17 +23,31 @@ namespace Messenger.API.Controllers
             _repository = repository;
         }
         
-        [HttpGet]
-        [Route("{id}")]
-        public Task<MessageDto[]> GetListOfChats(Guid id)
-        {
-            return _repository.GetListOfMessage(id);
-        }
-        
         [HttpPost]
         public Task<Guid> CreateChat([FromBody]InputChatDto inputChatDto)
         {
             return _repository.CreateChat(inputChatDto, HttpContext.GetUserId());
+        }
+        
+        [HttpGet]
+        public Task<ListOfChatDto[]> GetListOfChats()
+        {
+            return _repository.GetListOfChats(HttpContext.GetUserId());
+        }
+        
+        
+        [HttpGet]
+        [Route("{id}")]
+        public Task<OutputMessageDto[]> GetChatMessages(Guid id)
+        {
+            return _repository.GetChatMessages(id);
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        public Task<Guid> CreateMessageAsync([FromBody]InputMessageDto messageDto, Guid id)
+        {
+            return _repository.CreateMessageAsync(messageDto, HttpContext.GetUserId(), id);
         }
     }
 }

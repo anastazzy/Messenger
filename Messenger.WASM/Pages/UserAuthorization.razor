@@ -1,0 +1,36 @@
+﻿@page "/user/authorization"
+@inject HttpClient _httpClient
+
+<h3>Authorization</h3>
+
+Введите данные:
+<input 
+    @bind-value="_user.Username" 
+    @bind-value:event="oninput" 
+    placeholder="Введите имя пользователя" 
+    type="text" />
+<input 
+    @bind-value="_user.Password" 
+    @bind-value:event="oninput" 
+    placeholder="Введите пароль" 
+    type="text" />
+<button type="button" @onclick="AuthorizeUser">Войти в систему</button>
+
+
+
+@code {
+    private readonly User _user = new();
+
+    private async Task AuthorizeUser()
+    {
+        var response = await _httpClient.PostAsJsonAsync("user/authenticate", _user);
+        var content = await response.Content.ReadAsStringAsync();
+        _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",$"Bearer {content}");
+    }
+    
+    public class User
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+}

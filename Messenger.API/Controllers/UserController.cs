@@ -18,9 +18,8 @@ namespace Messenger.API.Controllers
             _repository = repository;
         }
 
-        [Route("registered")]
         [HttpPost]
-        public Task RegisteredUser(UserDto user)
+        public Task RegisterUser(UserDto user)
         {
             return _repository.SaveAsync(user);
         }
@@ -31,13 +30,6 @@ namespace Messenger.API.Controllers
         {
             return _repository.LoginAsync(user);
         }
-
-        [HttpGet]
-        [Route("chats")]
-        public Task<ListOfChatDto[]> GetListOfChats()
-        {
-            return _repository.GetListOfChats(HttpContext.GetUserId());
-        }
-
+        
     }
 }

@@ -1,0 +1,12 @@
+﻿.chat-row {
+    border: 1px solid;
+    padding: 5px;
+}
+
+.chat-row:hover {
+    border: 2px solid;
+}
+
+.new {
+    font-weight: bold;
+}

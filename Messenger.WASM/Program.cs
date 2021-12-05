@@ -18,7 +18,8 @@ namespace Messenger.WASM
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(
-                sp => new HttpClient {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
+                sp => new HttpClient {BaseAddress = new Uri("http://localhost:5000/api/")});
+            
 
             await builder.Build().RunAsync();
         }

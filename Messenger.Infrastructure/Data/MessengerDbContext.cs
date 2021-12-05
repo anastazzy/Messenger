@@ -21,6 +21,10 @@ namespace Messenger.Infrastructure.Data
         public DbSet<Chat> Chats { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Username)
+                .IsUnique(); 
+            
             modelBuilder.Entity<Chat>()
                 .HasMany<User>(x => x.UsersInChat)
                 .WithMany(x => x.UserChats);

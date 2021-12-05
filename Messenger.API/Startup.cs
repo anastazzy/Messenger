@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Messenger.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -55,6 +56,12 @@ namespace Messenger.API
             services.AddScoped<UserRepository>();
             services.AddScoped<ChatRepository>();
 
+            services.AddCors(o => o
+                .AddDefaultPolicy(b =>
+                    b.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -63,8 +70,13 @@ namespace Messenger.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var scope = serviceScope.ServiceProvider.GetService<MessengerDbContext>();
+                scope.Database.EnsureCreated();
+            }
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,6 +89,9 @@ namespace Messenger.API
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.UseCors();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

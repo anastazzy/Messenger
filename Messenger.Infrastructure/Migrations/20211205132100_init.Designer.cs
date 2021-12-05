@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Messenger.Infrastructure.Migrations
 {
     [DbContext(typeof(MessengerDbContext))]
-    [Migration("20211204114357_init")]
+    [Migration("20211205132100_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,6 +101,9 @@ namespace Messenger.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

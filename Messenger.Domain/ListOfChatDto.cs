@@ -8,6 +8,7 @@ namespace Messenger.Domain
 {
     public class ListOfChatDto
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string LastMessage { get; set; }
         public string Username { get; set; }

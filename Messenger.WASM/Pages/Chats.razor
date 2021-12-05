@@ -1,0 +1,59 @@
+﻿@page "/chats"
+@inject HttpClient _httpClient
+@inject NavigationManager NavigationManager
+
+<div class="chat">
+    <button type="button" @onclick="CreateChat">Создать чат</button>
+    @if (_chats != null)
+    {
+        @foreach (var chat in _chats)
+        {
+            <div class="chat-row" @onclick="x => GoToChat(chat.Id)">
+                <div class="chat-name">@chat.Name</div>
+                <div class="chat-last-message @(@chat.Status == Status.Read) ? 'read' : 'new'">@chat.Username: @chat.LastMessage</div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>Loading...</div>
+    }
+</div>
+
+@code {
+    private Chat[] _chats;
+
+    private async Task GetUserChats()
+    {
+        var response = await _httpClient.GetAsync("chat");
+        _chats = await response.Content.ReadFromJsonAsync<Chat[]>();
+    }
+
+    protected override Task OnInitializedAsync() => GetUserChats();
+
+    public class Chat
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string LastMessage { get; set; }
+        public string Username { get; set; }
+        public Status Status { get; set; }
+    }
+
+    private void GoToChat(Guid id)
+    {
+        NavigationManager.NavigateTo($"chats/{id}");
+    }
+
+    private async Task CreateChat()
+    {
+        var response = await _httpClient.GetAsync("chats");
+    }
+
+    public enum Status
+    {
+        Delivered,
+        Read
+    }
+
+}

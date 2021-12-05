@@ -72,27 +72,6 @@ namespace Messenger.Infrastructure.Repository
                 .WriteToken(token);
         }
 
-        public async Task<ListOfChatDto[]> GetListOfChats(Guid userId)
-        {
-            var response = await _dbContext.Chats
-                .Where(x => x.UsersInChat.Select(y => y.Id).Contains(userId))
-                .Include(x => x.MessagesInChat)
-                .ThenInclude(x => x.User)
-                .Select(x => new 
-                {
-                    x.Title,
-                    LastMessage = x.MessagesInChat.OrderBy(x => x.CreationTime).Last()
-                })
-                .ToArrayAsync();
-
-           return response.Select(x => new ListOfChatDto()
-            {
-                LastMessage = x.LastMessage.Text,
-                Name = x.Title,
-                Status = x.LastMessage.Status,
-                Username = x.LastMessage.User.Username
-            }).ToArray();
-
-        }
+        
     }
 }

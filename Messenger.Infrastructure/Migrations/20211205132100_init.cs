@@ -111,6 +111,12 @@ namespace Messenger.Infrastructure.Migrations
                 name: "IX_Messages_UserId",
                 table: "Messages",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Username",
+                table: "Users",
+                column: "Username",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

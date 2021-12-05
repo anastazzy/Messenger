@@ -1,0 +1,34 @@
+﻿@page "/user/registration"
+@inject HttpClient _httpClient
+
+<h3>Registration</h3>
+
+введите данные:
+<input 
+    @bind-value="_user.Username" 
+    @bind-value:event="oninput" 
+    placeholder="Введите имя пользователя" 
+    type="text" />
+<input 
+    @bind-value="_user.Password" 
+    @bind-value:event="oninput" 
+    placeholder="Введите пароль" 
+    type="text" />
+<button type="button" @onclick="CreateUser">Зарегистрироваться</button>
+
+
+
+@code {
+    private readonly User _user = new();
+    
+    private Task CreateUser()
+    {
+        return _httpClient.PostAsJsonAsync("User", _user);
+    }
+    
+    public class User
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+}

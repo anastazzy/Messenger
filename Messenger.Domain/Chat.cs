@@ -12,7 +12,7 @@ namespace Messenger.Domain
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public DateTimeOffset CreationTime { get; set; }
+        public DateTimeOffset CreationTime { get; set; } = DateTimeOffset.UtcNow;
         public Guid AdminId { get; set; }
         public User Admin { get; set; }
         public IEnumerable<User> UsersInChat { get; set; }

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Messenger.Domain
+namespace Messenger.Domain.Contracts
 {
-    public enum Status
+    public class InputMessageDto
     {
-        Delivered,
-        Read
+        public string Text { get; set; }
     }
 }

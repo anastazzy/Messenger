@@ -1,0 +1,10 @@
+﻿.message-row {
+    padding: 5px;
+}
+
+.chat-row:hover {
+    border: 2px solid;
+}
+
+.input-message{
+}

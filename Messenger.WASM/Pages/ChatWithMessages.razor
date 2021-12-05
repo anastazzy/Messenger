@@ -1,0 +1,75 @@
+﻿@page "/chats/{id:guid}"
+@inject HttpClient _httpClient
+
+
+
+<div class="message">
+    @if (_messages != null)
+    {
+        @foreach (var message in _messages)
+        {
+            <div class="message-row">
+                <div class="input-message @(@message.Status == Status.Read) ? 'read' : 'new'">@message.Username: @message.Text</div>
+                <div class="time">@message.CreationTime</div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>Loading...</div>
+    }
+</div>
+<div class="output-message">
+    <input
+        @bind-value="_outputMessage.Text" 
+        @bind-value:event="oninput" 
+        placeholder="Введите сообщение" 
+        type="text" />
+    <button type="button" @onclick="SendMessage">Отправить сообщение</button>
+</div>
+
+
+
+@code{
+    [Parameter]
+    public Guid Id { get; set; }
+    private Message[] _messages;
+    private OutputMessage _outputMessage = new ();
+
+    private async Task GetChatMessages()
+    {
+        var response = await _httpClient.GetAsync($"chat/{Id}");
+        _messages = await response.Content.ReadFromJsonAsync<Message[]>();
+    }
+
+    private async Task SendMessage()
+    {
+        var response = await _httpClient.PostAsJsonAsync($"chat/{Id}",_outputMessage);
+    }
+    
+    protected override Task OnInitializedAsync()
+    {
+        return GetChatMessages();
+    }
+
+
+    private class Message
+    {
+        public string Text { get; set; }
+        public Status Status { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
+        public string Username { get; set; }
+        public Guid ChatId { get; set; }
+    }
+
+    private class OutputMessage
+    {
+        public string Text { get; set; }
+    }
+    
+    public enum Status
+    {
+        Delivered,
+        Read
+    }
+}
