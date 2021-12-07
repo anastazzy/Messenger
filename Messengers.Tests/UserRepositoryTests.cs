@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Messenger.Domain.Contracts;
+using Messenger.Domain;
 using Messenger.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -25,7 +25,8 @@ namespace Messengers.Tests
         {
             var user = new UserDto()
             {
-                Username = "waimagi"
+                Username = "waimagi",
+                Password = "waimagi"
             };
 
             var userInDatabase = await _repository.SaveAsync(user);

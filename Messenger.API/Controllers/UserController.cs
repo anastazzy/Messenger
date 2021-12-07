@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Messenger.Domain;
-using Messenger.Domain.Contracts;
 using Messenger.Infrastructure.Repository;
 using Microsoft.AspNetCore.Mvc;
 

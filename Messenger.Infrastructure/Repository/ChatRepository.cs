@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Messenger.Domain;
 using Messenger.Infrastructure.Data;
-using Messenger.Domain.Contracts;
+using Messenger.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 

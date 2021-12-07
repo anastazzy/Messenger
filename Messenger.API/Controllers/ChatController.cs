@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Messenger.Domain;
-using Messenger.Domain.Contracts;
 using Messenger.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 
